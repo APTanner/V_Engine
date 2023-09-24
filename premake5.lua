@@ -8,7 +8,7 @@ workspace "V_Engine"
         "Release"
     }
 
-outputdir = "%{cfg.buildcfg}-{cfg.architecture}"
+outputdir = "%{cfg.buildcfg}-%{cfg.architecture}"
 
 project "V_Engine"
     location "V_Engine"
@@ -26,7 +26,8 @@ project "V_Engine"
 
     includedirs
     {
-        "%{prj.name}/lib/fOutput/include"
+        "%{prj.name}/src",
+        "%{prj.name}/lib/Simple_Logger/Simple_Logger/include"
     }
 
     filter "configurations:Debug"

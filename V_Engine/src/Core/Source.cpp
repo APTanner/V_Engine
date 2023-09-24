@@ -1,14 +1,14 @@
-#include "Logger.h"
+#include "Log.h"
 
 namespace V_Engine
 {
 	int main()
 	{
-		Logger::init();
+		Log::init();
 		int a = 1;
-		Logger::debug("Testing, a is %i", a);
-		Logger::error("Problem");
-		Logger::warning("Something wrong but it works for now");
+		LOG_DEBUG("Testing, a is %i and also %i", a);
+		LOG_ERROR("Problem");
+		LOG_WARNING("Something wrong but it works for now");
 		return 0;
 	}
 }
