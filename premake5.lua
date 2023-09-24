@@ -18,6 +18,9 @@ project "V_Engine"
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir    ("build/" .. outputdir .. "/%{prj.name}")
 
+    pchheader "pch.h"
+    pchsource "V_Engine/src/pch.cpp"
+
     files 
     {
         "%{prj.name}/src/**.h",

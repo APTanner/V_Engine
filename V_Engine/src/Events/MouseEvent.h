@@ -1,7 +1,5 @@
 #pragma once
 
-#include <sstream>
-
 #include "Events/Event.h"
 
 namespace V_Engine
