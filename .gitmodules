@@ -4,3 +4,6 @@
 [submodule "V_Engine/lib/Simple_Logger"]
 	path = V_Engine/lib/Simple_Logger
 	url = https://github.com/lunchbox-boy/Simple_Logger.git
+[submodule "V_Engine/lib/GLFW"]
+	path = V_Engine/lib/GLFW
+	url = https://github.com/lunchbox-boy/glfw.git

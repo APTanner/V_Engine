@@ -10,6 +10,12 @@ workspace "V_Engine"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.architecture}"
 
+Includes = {}
+Includes["Simple_Logger"] = "V_Engine/lib/Simple_Logger/Simple_Logger"
+Includes["GLFW"] = "V_Engine/lib/GLFW"
+
+include "V_Engine/lib/GLFW"
+
 project "V_Engine"
     location "V_Engine"
     kind "ConsoleApp"
@@ -17,7 +23,7 @@ project "V_Engine"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir    ("build/" .. outputdir .. "/%{prj.name}")
-
+    
     pchheader "pch.h"
     pchsource "V_Engine/src/pch.cpp"
 
@@ -30,14 +36,24 @@ project "V_Engine"
     includedirs
     {
         "%{prj.name}/src",
-        "%{prj.name}/lib/Simple_Logger/Simple_Logger/include"
+        "%{Includes.Simple_Logger}/include",
+        "%{Includes.GLFW}/include"
     }
+
+    links {
+        "GLFW",
+        "opengl32.lib"
+    }
+
+    cppdialect "C++17"
+    systemversion "latest"
+	staticruntime "On"
 
     filter "configurations:Debug"
         defines "DEBUG"
         symbols "On"
     filter "configurations:SeaTrials"
-        defines "SEATRIALS"
+        defines "SEA_TRIALS"
         optimize "On"
     filter "configurations:Release"
         defines "RELEASE"
