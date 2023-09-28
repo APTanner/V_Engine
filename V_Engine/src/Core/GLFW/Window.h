@@ -5,11 +5,17 @@
 #include "GLFW/glfw3.h"
 #include "Core/Events/Event.h"
 
+
+
 namespace V_Engine
 {
+	class GLFWManager;
+
 	class Window
 	{
 	public:
+		friend class GLFWManager;
+
 		using f_EventCallback = std::function<void(Event&)>;
 
 		struct Data
@@ -24,13 +30,13 @@ namespace V_Engine
 			Data(const std::string& title = "V",
 				unsigned int width = 1920,
 				unsigned int height = 1080,
-				bool vSync = false)
+				bool vSync = true)
 				: Title(title), Width(width), Height(height), VSync(vSync)
 			{
 			}
 		};
 
-		Window(Data data);
+		~Window();
 
 		void OnUpdate();
 
@@ -42,6 +48,7 @@ namespace V_Engine
 
 		inline void SetEventCallback(const f_EventCallback& callback) { m_data.EventCallback = callback; }
 	private:
+		Window(Data data);
 		GLFWwindow* m_window;
 		Data m_data;
 		static bool s_GLFWInitialized;

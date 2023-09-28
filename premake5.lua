@@ -42,7 +42,8 @@ project "V_Engine"
 
     links {
         "GLFW",
-        "opengl32.lib"
+        "opengl32.lib",
+        "dwmapi.lib"
     }
 
     cppdialect "C++17"
