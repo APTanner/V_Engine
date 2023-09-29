@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Events/Event.h"
+#include "Core/Events/Event.h"
 
 namespace V_Engine
 {
@@ -16,11 +16,11 @@ namespace V_Engine
 	class WindowResizeEvent : public Event
 	{
 	public:
-		WindowResizeEvent(unsigned int width, unsigned int height)
+		WindowResizeEvent(int width, int height)
 			: m_width(width), m_height(height) {}
 
-		inline unsigned int GetWidth() const { return m_width; }
-		inline unsigned int GetHeight() const { return m_height; }
+		inline int GetWidth() const { return m_width; }
+		inline int GetHeight() const { return m_height; }
 
 		std::string ToString() const override
 		{
@@ -32,8 +32,8 @@ namespace V_Engine
 		EVENT_TYPE_FUNCTIONS(WindowResize)
 		EVENT_CATEGRORY_FUNCTIONS(WindowCategoryEvent)
 	private:
-		unsigned int m_width;
-		unsigned int m_height;
+		int m_width;
+		int m_height;
 	};
 
 }

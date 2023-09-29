@@ -1,5 +1,6 @@
 #pragma once
 
+#include "pch.h"
 #include "Core/Core.h"
 
 namespace V_Engine
@@ -22,9 +23,9 @@ namespace V_Engine
 		MouseButtonCategoryEvent = BIT_LOC(4)
 	};
 
-#define EVENT_TYPE_FUNCTIONS(type) static EventType GetClassEventType() { return EventType::##type;}\
+#define EVENT_TYPE_FUNCTIONS(type) static EventType GetClassEventType() { return EventType::type;}\
 									virtual EventType GetEventType() const override { return GetClassEventType();}\
-									virtual const char* GetName() const override { return #type;}
+									virtual const char* GetName() const override { return STRINGIZE(EVENT::type);}
 
 #define EVENT_CATEGRORY_FUNCTIONS(category) virtual int GetCategory() const override { return category; }
 
@@ -48,7 +49,7 @@ namespace V_Engine
 	class EventDispatcher
 	{
 		template<typename T>
-		using EventFunc = std::function<bool(T&)>;
+		using EventFunc = std::function<bool(const T&)>;
 	public:
 		EventDispatcher(Event& event) 
 			: m_event(event) {}

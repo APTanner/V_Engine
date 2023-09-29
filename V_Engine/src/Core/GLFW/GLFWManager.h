@@ -14,6 +14,8 @@ namespace V_Engine
 		GLFWManager(GLFWManager&&) = delete;
 
 		static std::unique_ptr<Window> InstantiateWindow(const Window::Data& windowData = Window::Data());
+
+		static void GLFWErrorCallback(int error, const char* message);
 		static void Shutdown();
 	private:
 

@@ -1,12 +1,20 @@
 #include "pch.h"
 #include "Application.h"
 
+#include "Events/WindowEvent.h"
+
+
 namespace V_Engine
 {
 	Application::Application()
 	{
+		// initialization
 		Log::init();
 		m_window = std::unique_ptr<Window>(GLFWManager::InstantiateWindow());
+		m_window->SetEventCallback([this](Event& e)
+		{
+			this->OnEvent(e);
+		});
 	}
 
 	Application::~Application()
@@ -16,17 +24,25 @@ namespace V_Engine
 
 	void Application::Run()
 	{
-		int a = 1;
-		LOG_DEBUG("Testing, a is %i and also %i", a);
-		LOG_ERROR("Problem");
-		LOG_WARNING("Something wrong but it works for now");
-
-		WindowResizeEvent e(10, 10);
-		if (e.IsInCategory(WindowCategoryEvent))
+		while (m_running)
 		{
-			LOG_DEBUG(e.ToString());
+			glClearColor(1, 0, 1, 1);
+			glClear(GL_COLOR_BUFFER_BIT);
+			m_window->OnUpdate();
 		}
+	}
 
-		while (true);
+	void Application::OnEvent(Event& event)
+	{
+		LOG_DEBUG(event.ToString());
+		EventDispatcher d(event);
+		d.Dispatch<WindowCloseEvent>([this](const WindowCloseEvent& event) -> bool
+			{ return this->OnWindowClose(event); });
+	}
+
+	bool Application::OnWindowClose(const WindowCloseEvent& event)
+	{
+		m_running = false;
+		return true;
 	}
 }

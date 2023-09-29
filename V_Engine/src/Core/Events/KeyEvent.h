@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Events/Event.h"
+#include "Core/Events/Event.h"
 
 namespace V_Engine
 {
@@ -29,6 +29,7 @@ namespace V_Engine
 		{
 			std::ostringstream oss;
 			oss << "EVENT::KEY_PRESSED: " << m_keyCode << " (Repeated " << m_repeatCount << " times)";
+			return oss.str();
 		}
 
 		EVENT_TYPE_FUNCTIONS(KeyPress)

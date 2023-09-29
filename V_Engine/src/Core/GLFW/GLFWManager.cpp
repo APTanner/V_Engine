@@ -13,11 +13,20 @@ namespace V_Engine
 			{
 				LOG_ERROR("GLFW not initialized");
 			}
+			s_GLFWInitialized = true;
+			glfwSetErrorCallback(GLFWErrorCallback);
 		}
 		// the memory class doesn't have access to Window's contructor
 		//   therefore, we have to allocate the memory ourselves, then
 		//   wrap it
-		return std::unique_ptr<Window>(new Window(windowData));
+		auto ptr = std::unique_ptr<Window>(new Window(windowData));
+		ptr->SetCallbacks();
+		return ptr;
+	}
+
+	void GLFWManager::GLFWErrorCallback(int error, const char* message)
+	{
+		LOG_ERROR("GLFW Error [%i]: %s", error, message);
 	}
 
 	void GLFWManager::Shutdown()

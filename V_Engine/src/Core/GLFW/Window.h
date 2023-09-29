@@ -21,15 +21,15 @@ namespace V_Engine
 		struct Data
 		{
 			std::string Title;
-			unsigned int Width;
-			unsigned int Height;
+			int Width;
+			int Height;
 			bool VSync;
 
 			f_EventCallback EventCallback;
 
 			Data(const std::string& title = "V",
-				unsigned int width = 1920,
-				unsigned int height = 1080,
+				int width = 1920,
+				int height = 1080,
 				bool vSync = true)
 				: Title(title), Width(width), Height(height), VSync(vSync)
 			{
@@ -38,10 +38,14 @@ namespace V_Engine
 
 		~Window();
 
+		void SetCallbacks();
+		void ClearCallbacks();
+
 		void OnUpdate();
 
-		inline unsigned int GetWidth() const { return m_data.Width; }
-		inline unsigned int GetHeight() const { return m_data.Height; }
+
+		inline int GetWidth() const { return m_data.Width; }
+		inline int GetHeight() const { return m_data.Height; }
 
 		void SetVSync(bool enabled);
 		bool IsVSync() const;
