@@ -29,6 +29,23 @@ namespace V_Engine
 
 #define EVENT_CATEGRORY_FUNCTIONS(category) virtual int GetCategory() const override { return category; }
 
+// maybe used in the future if events have more complex member data
+#define EVENT_MOVE_SEMANTICS(className, moveLogic) \
+	className(className&& other) noexcept				\
+		: Event(std::move(other))						\
+	{													\
+		moveLogic;										\
+	}													\
+	className& operator=(className&& other) noexcept	\
+	{													\
+		if (this != &other)								\
+		{												\
+			Event::operator=(std::move(other));			\
+			moveLogic;									\
+		}												\
+	}
+														
+
 	class Event
 	{
 		friend class EventDispatcher;

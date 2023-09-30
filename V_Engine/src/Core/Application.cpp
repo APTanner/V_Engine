@@ -11,14 +11,17 @@ namespace V_Engine
 		// initialization
 		Log::init();
 		m_window = std::unique_ptr<Window>(GLFWManager::InstantiateWindow());
-		m_window->SetEventCallback([this](Event& e)
+		m_window->SetEventCallback([this](std::unique_ptr<Event> e)
 		{
-			this->OnEvent(e);
+			this->OnEvent(std::move(e));
 		});
 	}
 
 	Application::~Application()
 	{
+		// delete the window to stop it trying to deallocate itself after GLFW has already
+		//   been shut down
+		m_window.reset();
 		GLFWManager::Shutdown();
 	}
 
@@ -29,20 +32,33 @@ namespace V_Engine
 			glClearColor(1, 0, 1, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 			m_window->OnUpdate();
+			HandleEvents();
 		}
 	}
 
-	void Application::OnEvent(Event& event)
+	void Application::OnEvent(std::unique_ptr<Event> event)
 	{
-		LOG_DEBUG(event.ToString());
-		EventDispatcher d(event);
-		d.Dispatch<WindowCloseEvent>([this](const WindowCloseEvent& event) -> bool
-			{ return this->OnWindowClose(event); });
+		m_eventBuffer.Push(std::move(event));
 	}
 
 	bool Application::OnWindowClose(const WindowCloseEvent& event)
 	{
 		m_running = false;
 		return true;
+	}
+
+	void Application::HandleEvents()
+	{
+		while (!m_eventBuffer.empty())
+		{
+			Event& e = m_eventBuffer.front();
+			LOG_DEBUG(e.ToString());
+			EventDispatcher d{ e };
+			d.Dispatch<WindowCloseEvent>([this](const WindowCloseEvent& event) -> bool
+				{
+					return this->OnWindowClose(event);
+				});
+			m_eventBuffer.Pop();
+		}
 	}
 }

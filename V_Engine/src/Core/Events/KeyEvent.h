@@ -15,7 +15,7 @@ namespace V_Engine
 			: m_keyCode(keyCode) {}
 
 		int m_keyCode;
-	};
+	};												
 
 	class KeyPressedEvent : public KeyEvent
 	{

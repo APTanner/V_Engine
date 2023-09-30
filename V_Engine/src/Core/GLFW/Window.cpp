@@ -36,20 +36,20 @@ namespace V_Engine
 				{
 				case GLFW_PRESS:
 				{
-					KeyPressedEvent event(key, 0);
-					data->EventCallback(event);
+					std::unique_ptr<Event> event = std::make_unique<KeyPressedEvent>(key, 0);
+					data->EventCallback(std::move(event));
 					break;
 				}
 				case GLFW_RELEASE:
 				{
-					KeyReleasedEvent event(key);
-					data->EventCallback(event);
+					std::unique_ptr<Event> event = std::make_unique<KeyReleasedEvent>(key);
+					data->EventCallback(std::move(event));
 					break;
 				}
 				case GLFW_REPEAT:
 				{
-					KeyPressedEvent event(key, 1);
-					data->EventCallback(event);
+					std::unique_ptr<Event> event = std::make_unique<KeyPressedEvent>(key, 1);
+					data->EventCallback(std::move(event));
 					break;
 				}
 				}
@@ -63,14 +63,14 @@ namespace V_Engine
 				{
 				case GLFW_PRESS:
 				{
-					MouseButtonPressEvent event(button);
-					data->EventCallback(event);
+					std::unique_ptr<Event> event = std::make_unique<MouseButtonPressEvent>(button);
+					data->EventCallback(std::move(event));
 					break;
 				}
 				case GLFW_RELEASE:
 				{
-					MouseButtonReleaseEvent event(button);
-					data->EventCallback(event);
+					std::unique_ptr<Event> event = std::make_unique<MouseButtonReleaseEvent>(button);
+					data->EventCallback(std::move(event));
 					break;
 				}
 				}
@@ -79,15 +79,15 @@ namespace V_Engine
 			{
 				Data* data = static_cast<Data*>(glfwGetWindowUserPointer(window));
 
-				MouseMoveEvent event((float)xPos, (float)yPos);
-				data->EventCallback(event);
+				std::unique_ptr<Event> event = std::make_unique<MouseMoveEvent>((float)xPos, (float)yPos);
+				data->EventCallback(std::move(event));
 			});
 		glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xOffset, double yOffset)
 			{
 				Data* data = static_cast<Data*>(glfwGetWindowUserPointer(window));
 
-				MouseScrollEvent event((float)xOffset, (float)yOffset);
-				data->EventCallback(event);
+				std::unique_ptr<Event> event = std::make_unique<MouseScrollEvent>((float)xOffset, (float)yOffset);
+				data->EventCallback(std::move(event));
 			});
 
 		glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height)
@@ -96,15 +96,15 @@ namespace V_Engine
 				data->Width = width;
 				data->Height = height;
 
-				WindowResizeEvent event(width, height);
-				data->EventCallback(event);
+				std::unique_ptr<Event> event = std::make_unique<WindowResizeEvent>(width, height);
+				data->EventCallback(std::move(event));
 			});
 		glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window)
 			{
 				Data* data = static_cast<Data*>(glfwGetWindowUserPointer(window));
 
-				WindowCloseEvent event;
-				data->EventCallback(event);
+				std::unique_ptr<Event> event = std::make_unique<WindowCloseEvent>();
+				data->EventCallback(std::move(event));
 			});
 	}
 

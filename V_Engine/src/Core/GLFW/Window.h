@@ -16,7 +16,7 @@ namespace V_Engine
 	public:
 		friend class GLFWManager;
 
-		using f_EventCallback = std::function<void(Event&)>;
+		using f_EventCallback = std::function<void(std::unique_ptr<Event>)>;
 
 		struct Data
 		{
@@ -28,8 +28,8 @@ namespace V_Engine
 			f_EventCallback EventCallback;
 
 			Data(const std::string& title = "V",
-				int width = 1920,
-				int height = 1080,
+				int width = 1080,
+				int height = 720,
 				bool vSync = true)
 				: Title(title), Width(width), Height(height), VSync(vSync)
 			{
