@@ -1,7 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "Core/Log.h"
-#include "Core/GLFW/Window.h"
+#include "GLFW/Window.h"
 
 namespace V_Engine
 {

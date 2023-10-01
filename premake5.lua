@@ -13,8 +13,12 @@ outputdir = "%{cfg.buildcfg}-%{cfg.architecture}"
 Includes = {}
 Includes["Simple_Logger"] = "V_Engine/lib/Simple_Logger/Simple_Logger"
 Includes["GLFW"] = "V_Engine/lib/GLFW"
+Includes["GLAD"] = "V_Engine/lib/GLAD"
+Includes["imgui"] = "V_Engine/lib/imgui"
 
 include "V_Engine/lib/GLFW"
+include "V_Engine/lib/GLAD"
+include "V_Engine/lib/imgui"
 
 project "V_Engine"
     location "V_Engine"
@@ -37,18 +41,24 @@ project "V_Engine"
     {
         "%{prj.name}/src",
         "%{Includes.Simple_Logger}/include",
-        "%{Includes.GLFW}/include"
+        "%{Includes.GLFW}/include",
+        "%{Includes.GLAD}/include",
+        "%{Includes.imgui}"
     }
 
     links {
         "GLFW",
+        "GLAD",
         "opengl32.lib",
-        "dwmapi.lib"
+        "dwmapi.lib",
+        "imgui",
     }
 
     cppdialect "C++17"
     systemversion "latest"
 	staticruntime "On"
+
+    defines "IMGUI_IMPL_OPENGL_LOADER_CUSTOM"
 
     filter "configurations:Debug"
         defines "DEBUG"

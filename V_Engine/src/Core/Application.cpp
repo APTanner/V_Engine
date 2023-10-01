@@ -3,18 +3,28 @@
 
 #include "Events/WindowEvent.h"
 
+#include "imgui/imguiLayer.h"
+
 
 namespace V_Engine
 {
+
+	Application* Application::m_instance = nullptr;
+
 	Application::Application()
 	{
+		V_ASSERT(m_instance == nullptr, "Can't have multiple applications");
+		m_instance = this;
+
 		// initialization
 		Log::init();
 		m_window = std::unique_ptr<Window>(GLFWManager::InstantiateWindow());
 		m_window->SetEventCallback([this](std::unique_ptr<Event> e)
-		{
-			this->OnEvent(std::move(e));
-		});
+			{
+				this->OnEvent(std::move(e));
+			});
+
+		m_layerStack.Push(new imguiLayer());
 	}
 
 	Application::~Application()
@@ -22,7 +32,10 @@ namespace V_Engine
 		// delete the window to stop it trying to deallocate itself after GLFW has already
 		//   been shut down
 		m_window.reset();
+		/*delete &m_layerStack;
+		delete &m_eventBuffer;*/
 		GLFWManager::Shutdown();
+		LOG_WARNING("GLFW Shutdown: All following GLFW errors are from other usages of GLFW trying to clean themselves up but being unable to");
 	}
 
 	void Application::Run()
@@ -32,7 +45,9 @@ namespace V_Engine
 			glClearColor(1, 0, 1, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 			m_window->OnUpdate();
+			HandleLayerUpdates();
 			HandleEvents();
+			m_window->OnSwapBuffers();
 		}
 	}
 
@@ -59,6 +74,20 @@ namespace V_Engine
 					return this->OnWindowClose(event);
 				});
 			m_eventBuffer.Pop();
+		}
+	}
+
+	void Application::HandleLayerUpdates()
+	{
+		// update layers
+		for (auto it = m_layerStack.layerBegin(); it != m_layerStack.layerEnd(); ++it)
+		{
+			(*it)->OnUpdate();
+		}
+		// update overlays
+		for (auto it = m_layerStack.overlayBegin(); it != m_layerStack.overlayEnd(); ++it)
+		{
+			(*it)->OnUpdate();
 		}
 	}
 }

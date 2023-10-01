@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Window.h"
 
+
+#include "GLFW/glfw3.h"
 #include "Core/Log.h"
 #include "Core/Events/KeyEvent.h"
 #include "Core/Events/MouseEvent.h"
@@ -123,6 +125,9 @@ namespace V_Engine
 	void Window::OnUpdate()
 	{
 		glfwPollEvents();
+	}
+	void Window::OnSwapBuffers()
+	{
 		glfwSwapBuffers(m_window);
 	}
 

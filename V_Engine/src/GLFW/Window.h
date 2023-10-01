@@ -2,15 +2,14 @@
 
 #include "pch.h"
 
-#include "GLFW/glfw3.h"
 #include "Core/Events/Event.h"
 
-
+struct GLFWwindow;
 
 namespace V_Engine
 {
 	class GLFWManager;
-
+	
 	class Window
 	{
 	public:
@@ -42,7 +41,10 @@ namespace V_Engine
 		void ClearCallbacks();
 
 		void OnUpdate();
+		void OnSwapBuffers();
 
+		//TODO remove
+		inline GLFWwindow* GetWindow() const { return m_window; }
 
 		inline int GetWidth() const { return m_data.Width; }
 		inline int GetHeight() const { return m_data.Height; }

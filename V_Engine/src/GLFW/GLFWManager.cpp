@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "GLFWManager.h"
 
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
+
 namespace V_Engine
 {
 	bool GLFWManager::s_GLFWInitialized;
@@ -21,6 +24,10 @@ namespace V_Engine
 		//   wrap it
 		auto ptr = std::unique_ptr<Window>(new Window(windowData));
 		ptr->SetCallbacks();
+		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+		{
+			LOG_ERROR("Failed to load Glad");
+		}
 		return ptr;
 	}
 

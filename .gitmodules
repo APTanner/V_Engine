@@ -7,3 +7,6 @@
 [submodule "V_Engine/lib/GLFW"]
 	path = V_Engine/lib/GLFW
 	url = https://github.com/lunchbox-boy/glfw.git
+[submodule "V_Engine/lib/imgui"]
+	path = V_Engine/lib/imgui
+	url = https://github.com/APTanner/imgui.git
