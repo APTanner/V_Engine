@@ -28,7 +28,7 @@ namespace V_Engine
 		std::string ToString() const override
 		{
 			std::ostringstream oss;
-			oss << "EVENT::KEY_PRESSED: " << m_keyCode << " (Repeated " << m_repeatCount << " times)";
+			oss << "EVENT::KEY_PRESSED: " << m_keyCode << ((m_repeatCount > 0) ? " (Repeated)" : "");
 			return oss.str();
 		}
 

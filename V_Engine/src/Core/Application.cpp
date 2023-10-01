@@ -2,8 +2,9 @@
 #include "Application.h"
 
 #include "Events/WindowEvent.h"
-
+#include "imgui/ImGuiManager.h"
 #include "imgui/imguiLayer.h"
+
 
 
 namespace V_Engine
@@ -32,17 +33,15 @@ namespace V_Engine
 		// delete the window to stop it trying to deallocate itself after GLFW has already
 		//   been shut down
 		m_window.reset();
-		/*delete &m_layerStack;
-		delete &m_eventBuffer;*/
+		ImGuiManager::Shutdown();
 		GLFWManager::Shutdown();
-		LOG_WARNING("GLFW Shutdown: All following GLFW errors are from other usages of GLFW trying to clean themselves up but being unable to");
 	}
 
 	void Application::Run()
 	{
 		while (m_running)
 		{
-			glClearColor(1, 0, 1, 1);
+			glClearColor(.51, .45, .9, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 			m_window->OnUpdate();
 			HandleLayerUpdates();

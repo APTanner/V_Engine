@@ -9,11 +9,13 @@ struct GLFWwindow;
 namespace V_Engine
 {
 	class GLFWManager;
+	class ImGuiManager;
 	
 	class Window
 	{
 	public:
 		friend class GLFWManager;
+		friend class ImGuiManager;
 
 		using f_EventCallback = std::function<void(std::unique_ptr<Event>)>;
 
@@ -42,9 +44,6 @@ namespace V_Engine
 
 		void OnUpdate();
 		void OnSwapBuffers();
-
-		//TODO remove
-		inline GLFWwindow* GetWindow() const { return m_window; }
 
 		inline int GetWidth() const { return m_data.Width; }
 		inline int GetHeight() const { return m_data.Height; }
