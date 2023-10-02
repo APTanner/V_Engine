@@ -6,6 +6,11 @@
 #include "Core/Application.h"
 #include "imgui/ImGuiManager.h"
 
+#include "Core/Events/Event.h"
+#include "Core/Events/MouseEvent.h"
+#include "Core/Events/KeyEvent.h"
+
+
 namespace V_Engine
 {
 
@@ -36,7 +41,22 @@ namespace V_Engine
 
 	void imguiLayer::OnEvent(Event& event)
 	{
-
+		EventDispatcher d{ event };
+		
+		if (event.IsInCategory(MouseCategoryEvent))
+		{
+			d.Dispatch<Event>([](const Event& event) -> bool
+				{
+					return ImGuiManager::WantCaptureMouse();
+				});
+		}
+		else if (event.IsInCategory(KeyboardCategoryEvent))
+		{
+			d.Dispatch<Event>([](const Event& event) -> bool
+				{
+					return ImGuiManager::WantCaptureKeyboard();
+				});
+			
+		}
 	}
-
 }

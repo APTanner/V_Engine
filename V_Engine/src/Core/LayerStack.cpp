@@ -6,7 +6,6 @@ namespace V_Engine
 	LayerStack::LayerStack()
 	{
 		m_layers = std::vector<Layer*>{};
-		m_overlays = std::vector<Layer*>{};
 	}
 
 	LayerStack::~LayerStack()
@@ -16,42 +15,40 @@ namespace V_Engine
 			layer->OnDetach();
 			delete layer;
 		}
-		for (Layer* overlay : m_overlays)
-		{
-			overlay->OnDetach();
-			delete overlay;
-		}
 	}
 
 	void LayerStack::Push(Layer* layer)
 	{
-		m_layers.push_back(layer);
+		m_layers.insert(m_layers.begin() + m_overlayStart, layer);
 		layer->OnAttach();
+		++m_overlayStart;
 	}
 
 	void LayerStack::Pop(Layer* layer)
 	{
-		auto it = std::find(m_layers.begin(), m_layers.end(), layer);
-		if (it != m_layers.end())
+		auto it_layerEnd = m_layers.begin() + m_overlayStart;
+		auto it = std::find(m_layers.begin(), it_layerEnd, layer);
+		if (it != it_layerEnd)
 		{
 			(*it)->OnDetach();
 			m_layers.erase(it);
+			--m_overlayStart;
 		}
 	}
 
 	void LayerStack::PushOverlay(Layer* overlay)
 	{
-		m_overlays.push_back(overlay);
+		m_layers.push_back(overlay);
 		overlay->OnAttach();
 	}
 
 	void LayerStack::PopOverlay(Layer* overlay)
 	{
-		auto it = std::find(m_overlays.begin(), m_overlays.end(), overlay);
-		if (it != m_overlays.end())
+		auto it = std::find(m_layers.begin()+m_overlayStart, m_layers.end(), overlay);
+		if (it != m_layers.end())
 		{
 			(*it)->OnDetach();
-			m_overlays.erase(it);
+			m_layers.erase(it);
 		}
 	}
 }

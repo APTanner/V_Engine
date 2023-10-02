@@ -17,14 +17,11 @@ namespace V_Engine
 		void PushOverlay(Layer* layer);
 		void PopOverlay(Layer* layer);
 
-		inline std::vector<Layer*>::iterator layerBegin() { return m_layers.begin(); }
-		inline std::vector<Layer*>::iterator layerEnd() { return m_layers.end(); }
-
-		inline std::vector<Layer*>::iterator overlayBegin() { return m_overlays.begin(); }
-		inline std::vector<Layer*>::iterator overlayEnd() { return m_overlays.end(); }
+		inline std::vector<Layer*>::iterator Begin() { return m_layers.begin(); }
+		inline std::vector<Layer*>::iterator End() { return m_layers.end(); }
 	private:
 		std::vector<Layer*> m_layers;
-		std::vector<Layer*> m_overlays;
+		int m_overlayStart = 0;
 	};
 }
 

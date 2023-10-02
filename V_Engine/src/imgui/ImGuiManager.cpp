@@ -1,15 +1,12 @@
 #include "pch.h"
 #include "ImGuiManager.h"
 
-#include "imgui.h"
-#include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_opengl3.h"
-
 #include "Core/Application.h"
 
 namespace V_Engine
 {
 	bool ImGuiManager::s_ImGuiInitialized = false;
+	ImGuiIO* ImGuiManager::io = nullptr;
 
 	void ImGuiManager::Initialize()
 	{
@@ -17,9 +14,9 @@ namespace V_Engine
 
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
-		ImGuiIO& io = ImGui::GetIO();
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+		io = &ImGui::GetIO();
+		io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+		io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 		//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
 
 		Application& app = Application::Get();
@@ -45,6 +42,8 @@ namespace V_Engine
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 		ImGui::ShowDemoWindow(); // Show demo window! :)
+
+		
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

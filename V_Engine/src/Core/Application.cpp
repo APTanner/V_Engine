@@ -41,7 +41,7 @@ namespace V_Engine
 	{
 		while (m_running)
 		{
-			glClearColor(.51, .45, .9, 1);
+			glClearColor(.51f, .45f, .9f, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 			m_window->OnUpdate();
 			HandleLayerUpdates();
@@ -72,19 +72,25 @@ namespace V_Engine
 				{
 					return this->OnWindowClose(event);
 				});
+
+			// event should propogate down through all overlays and layers
+			for (auto it = m_layerStack.End(); it != m_layerStack.Begin();)
+			{
+				(*--it)->OnEvent(e);
+				if (e.IsHandled()) { break; }
+			}
+			if (!e.IsHandled())
+			{
+				LOG_WARNING("Event not handled");
+			}
 			m_eventBuffer.Pop();
 		}
 	}
 
 	void Application::HandleLayerUpdates()
 	{
-		// update layers
-		for (auto it = m_layerStack.layerBegin(); it != m_layerStack.layerEnd(); ++it)
-		{
-			(*it)->OnUpdate();
-		}
-		// update overlays
-		for (auto it = m_layerStack.overlayBegin(); it != m_layerStack.overlayEnd(); ++it)
+		// update layers and overlays
+		for (auto it = m_layerStack.Begin(); it != m_layerStack.End(); ++it)
 		{
 			(*it)->OnUpdate();
 		}

@@ -2,12 +2,14 @@
 
 #include "pch.h"
 #include "Core/Core.h"
+#include "Core/Log.h"
 
 namespace V_Engine
 {
 	enum class EventType
 	{
 		None = 0,
+		Event, // used when we just want to handle an arbitrary event 
 		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMove,
 		KeyPress, KeyRelease,
 		MouseButtonPress, MouseButtonRelease, MouseMove, MouseScroll
@@ -50,6 +52,7 @@ namespace V_Engine
 	{
 		friend class EventDispatcher;
 	public:
+		static EventType GetClassEventType() { return EventType::Event; }
 		virtual EventType GetEventType() const = 0;
 		virtual const char* GetName() const = 0;
 		virtual int GetCategory() const = 0;
@@ -59,6 +62,9 @@ namespace V_Engine
 		{
 			return GetCategory() & category;
 		}
+
+		inline bool IsHandled() const { return m_handled; }
+
 	protected:
 		bool m_handled = false;
 	};
@@ -75,7 +81,8 @@ namespace V_Engine
 		template<typename T>
 		bool Dispatch(EventFunc<T> func)
 		{
-			if (m_event.GetEventType() == T::GetClassEventType())
+			if (T::GetClassEventType() == EventType::Event || 
+				m_event.GetEventType() == T::GetClassEventType())
 			{
 				m_event.m_handled = func(dynamic_cast<T&>(m_event));
 				return true;
