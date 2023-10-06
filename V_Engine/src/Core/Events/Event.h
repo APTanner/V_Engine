@@ -82,7 +82,7 @@ namespace V_Engine
 		bool Dispatch(EventFunc<T> func)
 		{
 			if (T::GetClassEventType() == EventType::Event || 
-				m_event.GetEventType() == T::GetClassEventType())
+				T::GetClassEventType() == m_event.GetEventType())
 			{
 				m_event.m_handled = func(dynamic_cast<T&>(m_event));
 				return true;

@@ -56,7 +56,6 @@ namespace V_Engine
 				{
 					return ImGuiManager::WantCaptureKeyboard();
 				});
-			
 		}
 	}
 }

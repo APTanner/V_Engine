@@ -9,13 +9,11 @@ struct GLFWwindow;
 namespace V_Engine
 {
 	class GLFWManager;
-	class ImGuiManager;
 	
 	class Window
 	{
 	public:
 		friend class GLFWManager;
-		friend class ImGuiManager;
 
 		using f_EventCallback = std::function<void(std::unique_ptr<Event>)>;
 
@@ -38,6 +36,8 @@ namespace V_Engine
 		};
 
 		~Window();
+
+		inline GLFWwindow* GetWindowPtr() const { return m_window; }
 
 		void SetCallbacks();
 		void ClearCallbacks();
