@@ -10,3 +10,6 @@
 [submodule "V_Engine/lib/imgui"]
 	path = V_Engine/lib/imgui
 	url = https://github.com/APTanner/imgui.git
+[submodule "V_Engine/lib/glm"]
+	path = V_Engine/lib/glm
+	url = https://github.com/APTanner/glm.git

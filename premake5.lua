@@ -15,6 +15,7 @@ Includes["Simple_Logger"] = "V_Engine/lib/Simple_Logger/Simple_Logger"
 Includes["GLFW"] = "V_Engine/lib/GLFW"
 Includes["GLAD"] = "V_Engine/lib/GLAD"
 Includes["imgui"] = "V_Engine/lib/imgui"
+Includes["glm"] = "V_Engine/lib/glm"
 
 include "V_Engine/lib/GLFW"
 include "V_Engine/lib/GLAD"
@@ -34,7 +35,9 @@ project "V_Engine"
     files 
     {
         "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
+        "%{prj.name}/src/**.cpp",
+        "%{prj.name}/lib/glm/glm/**.hpp",
+        "%{prj.name}/lib/glm/glm/**.inl"
     }
 
     includedirs
@@ -43,7 +46,8 @@ project "V_Engine"
         "%{Includes.Simple_Logger}/include",
         "%{Includes.GLFW}/include",
         "%{Includes.GLAD}/include",
-        "%{Includes.imgui}"
+        "%{Includes.imgui}",
+        "%{Includes.glm}"
     }
 
     links {
