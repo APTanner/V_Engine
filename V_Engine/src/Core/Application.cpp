@@ -5,23 +5,6 @@
 #include "imgui/ImGuiManager.h"
 #include "imgui/imguiLayer.h"
 
-#include <glm/vec3.hpp> // glm::vec3
-#include <glm/vec4.hpp> // glm::vec4
-#include <glm/mat4x4.hpp> // glm::mat4
-#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
-
-glm::mat4 camera(float Translate, glm::vec2 const& Rotate)
-{
-	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.f);
-	glm::mat4 View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -Translate));
-	View = glm::rotate(View, Rotate.y, glm::vec3(-1.0f, 0.0f, 0.0f));
-	View = glm::rotate(View, Rotate.x, glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
-	return Projection * View * Model;
-}
-
-
-
 namespace V_Engine
 {
 
@@ -40,7 +23,8 @@ namespace V_Engine
 				this->OnEvent(std::move(e));
 			});
 
-		m_layerStack.Push(new imguiLayer());
+		m_imguiLayer = new imguiLayer();
+		m_layerStack.Push(m_imguiLayer);
 	}
 
 	Application::~Application()
@@ -56,11 +40,21 @@ namespace V_Engine
 	{
 		while (m_running)
 		{
+			m_window->OnUpdate();
+
 			glClearColor(.51f, .45f, .9f, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
-			m_window->OnUpdate();
+
+			m_imguiLayer->StartDrawImGui();
+			for (Layer* layer : m_layerStack)
+			{
+				layer->OnDrawImGui();
+			}
+			m_imguiLayer->EndDrawImGui();
+
 			HandleLayerUpdates();
 			HandleEvents();
+
 			m_window->OnSwapBuffers();
 		}
 	}
@@ -89,7 +83,7 @@ namespace V_Engine
 				});
 
 			// event should propogate down through all overlays and layers
-			for (auto it = m_layerStack.End(); it != m_layerStack.Begin();)
+			for (auto it = m_layerStack.end(); it != m_layerStack.begin();)
 			{
 				(*--it)->OnEvent(e);
 				if (e.IsHandled()) { break; }
@@ -105,9 +99,9 @@ namespace V_Engine
 	void Application::HandleLayerUpdates()
 	{
 		// update layers and overlays
-		for (auto it = m_layerStack.Begin(); it != m_layerStack.End(); ++it)
+		for (Layer* layer : m_layerStack)
 		{
-			(*it)->OnUpdate();
+			layer->OnUpdate();
 		}
 	}
 }

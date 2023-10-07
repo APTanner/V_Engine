@@ -9,12 +9,15 @@ namespace V_Engine
 		imguiLayer();
 		~imguiLayer();
 
-		void OnUpdate();
+		void OnDrawImGui() override;
 		
-		void OnAttach();
-		void OnDetach();
+		void OnAttach() override;
+		void OnDetach() override;
 
-		void OnEvent(Event& event);
+		void OnEvent(Event& event) override;
+
+		void StartDrawImGui();
+		void EndDrawImGui();
 	private:
 		float m_time = 0.0f;
 	};

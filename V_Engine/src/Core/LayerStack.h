@@ -17,8 +17,8 @@ namespace V_Engine
 		void PushOverlay(Layer* layer);
 		void PopOverlay(Layer* layer);
 
-		inline std::vector<Layer*>::iterator Begin() { return m_layers.begin(); }
-		inline std::vector<Layer*>::iterator End() { return m_layers.end(); }
+		inline std::vector<Layer*>::iterator begin() { return m_layers.begin(); }
+		inline std::vector<Layer*>::iterator end() { return m_layers.end(); }
 	private:
 		std::vector<Layer*> m_layers;
 		int m_overlayStart = 0;

@@ -34,9 +34,29 @@ namespace V_Engine
 		// currently handled by the application
 	}
 
-	void imguiLayer::OnUpdate()
+	void imguiLayer::StartDrawImGui()
 	{
-		ImGuiManager::Update();
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+	}
+
+	void imguiLayer::EndDrawImGui()
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		Application& app = Application::Get();
+		io.DisplaySize = ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
+
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			GLFWwindow* backup = glfwGetCurrentContext();
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			glfwMakeContextCurrent(backup);
+		}
 	}
 
 	void imguiLayer::OnEvent(Event& event)
@@ -57,5 +77,10 @@ namespace V_Engine
 					return ImGuiManager::WantCaptureKeyboard();
 				});
 		}
+	}
+
+	void imguiLayer::OnDrawImGui()
+	{
+		ImGui::ShowDemoWindow();
 	}
 }

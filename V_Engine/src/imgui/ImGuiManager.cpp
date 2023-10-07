@@ -6,7 +6,6 @@
 namespace V_Engine
 {
 	bool ImGuiManager::s_ImGuiInitialized = false;
-	ImGuiIO* ImGuiManager::io = nullptr;
 
 	void ImGuiManager::Initialize()
 	{
@@ -14,10 +13,11 @@ namespace V_Engine
 
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
-		io = &ImGui::GetIO();
-		io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-		io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-		//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
+		ImGuiIO& io = ImGui::GetIO();
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 		Application& app = Application::Get();
 		Window& window = app.GetWindow();
@@ -34,18 +34,5 @@ namespace V_Engine
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
-	}
-
-	void ImGuiManager::Update()
-	{
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-		ImGui::ShowDemoWindow(); // Show demo window! :)
-
-		
-
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	}
 }

@@ -7,6 +7,7 @@
 #include "Core/Events/WindowEvent.h"
 #include "Core/LayerStack.h"
 #include "Core/EventBuffer.h"
+#include "imgui/imguiLayer.h"
 
 namespace V_Engine
 {
@@ -25,9 +26,12 @@ namespace V_Engine
 		bool OnWindowClose(const WindowCloseEvent& event);
 	private:
 		static Application* m_instance;
+
 		std::unique_ptr<Window> m_window;
+		imguiLayer* m_imguiLayer;
 		LayerStack m_layerStack;
 		EventBuffer m_eventBuffer;
+
 		bool m_running = true;
 
 		void HandleEvents();

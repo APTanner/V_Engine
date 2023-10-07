@@ -12,6 +12,7 @@ namespace V_Engine
 		virtual ~Layer();
 
 		virtual void OnUpdate() {}
+		virtual void OnDrawImGui() {}
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
 		virtual void OnEvent(Event& event) {}
