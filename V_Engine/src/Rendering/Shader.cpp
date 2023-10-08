@@ -3,6 +3,8 @@
 
 #include <glad/glad.h>
 
+#include "Core/Log.h"
+
 namespace V_Engine
 {
 	Shader::Shader(const std::string& vertexSource, const std::string& fragSource)
@@ -32,7 +34,7 @@ namespace V_Engine
 			// We don't need the shader anymore.
 			glDeleteShader(vertexShader);
 
-			// Use the infoLog as you see fit.
+			LOG_ERROR("VERTEX_SHADER_COMPILATION: %s", infoLog);
 
 			// In this simple program, we'll just leave
 			return;
@@ -64,7 +66,8 @@ namespace V_Engine
 			// Either of them. Don't leak shaders.
 			glDeleteShader(vertexShader);
 
-			// Use the infoLog as you see fit.
+			LOG_ERROR("FRAGMENT_SHADER_COMPILATION: %s", infoLog);
+
 
 			// In this simple program, we'll just leave
 			return;
@@ -114,11 +117,15 @@ namespace V_Engine
 	}
 	Shader::~Shader()
 	{
+		glUseProgram(0);
+		glDeleteProgram(m_shader);
 	}
 	void Shader::Bind() const
 	{
+		glUseProgram(m_shader);
 	}
 	void Shader::Unbind() const
 	{
+		glUseProgram(0);
 	}
 }

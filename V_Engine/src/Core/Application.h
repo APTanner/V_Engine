@@ -1,13 +1,15 @@
 #pragma once
 #include "pch.h"
 
-#include "GLFW/glfw3.h"
-#include "Log.h"
-#include "GLFW/GLFWManager.h"
 #include "Core/Events/WindowEvent.h"
 #include "Core/LayerStack.h"
 #include "Core/EventBuffer.h"
 #include "imgui/imguiLayer.h"
+#include "Rendering/VertexArray.h"
+#include "Rendering/Shader.h"
+
+#include "GLFW/Window.h"
+
 
 namespace V_Engine
 {
@@ -25,6 +27,9 @@ namespace V_Engine
 		void OnEvent(std::unique_ptr<Event> event);
 		bool OnWindowClose(const WindowCloseEvent& event);
 	private:
+		void HandleEvents();
+		void HandleLayerUpdates();
+	private:
 		static Application* m_instance;
 
 		std::unique_ptr<Window> m_window;
@@ -32,9 +37,9 @@ namespace V_Engine
 		LayerStack m_layerStack;
 		EventBuffer m_eventBuffer;
 
-		bool m_running = true;
+		std::unique_ptr<VertexArray> m_vertexArray;
+		std::unique_ptr<Shader> m_shader;
 
-		void HandleEvents();
-		void HandleLayerUpdates();
+		bool m_running = true;
 	};
 }

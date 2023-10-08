@@ -12,6 +12,6 @@ namespace V_Engine
 		void Bind() const;
 		void Unbind() const;
 	private:
-		unsigned int m_shader;
+		unsigned int m_shader = 0;
 	};
 }

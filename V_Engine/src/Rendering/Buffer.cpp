@@ -3,12 +3,6 @@
 
 namespace V_Engine
 {
-
-	BufferLayout::BufferLayout(std::initializer_list<VertexBufferElement> elems)
-	{
-		m_elements = std::vector<VertexBufferElement>(elems);
-		CalculateStrideAndElementOffsets();
-	}
 	void BufferLayout::CalculateStrideAndElementOffsets()
 	{
 		int strideSoFar{};
@@ -21,20 +15,25 @@ namespace V_Engine
 		m_stride = strideSoFar;
 	}
 
-
-	VertexBuffer::VertexBuffer(float* verticies, unsigned int size)
+	VertexBuffer::VertexBuffer(float* verticies, unsigned int size, BufferLayout layout)
 	{
 		glGenBuffers(1, &m_vbo);
 		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 		glBufferData(GL_ARRAY_BUFFER, size, verticies, GL_STATIC_DRAW);
+		m_layout = layout;
 	}
-	void VertexBuffer::Bind() const 
+	VertexBuffer::~VertexBuffer()
 	{
-
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glDeleteBuffers(1, &m_vbo);
+	}
+	void VertexBuffer::Bind() const
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	}
 	void VertexBuffer::Unbind() const
 	{
-
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
 	ElementBuffer::ElementBuffer(uint32_t* indicies, unsigned int size)
@@ -43,13 +42,19 @@ namespace V_Engine
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indicies, GL_STATIC_DRAW);
 	}
-
+	ElementBuffer::~ElementBuffer()
+	{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glDeleteBuffers(1, &m_ebo);
+	}
 	void ElementBuffer::Bind() const
 	{
-
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
 	}
 	void ElementBuffer::Unbind() const
 	{
-
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
+
+
 }

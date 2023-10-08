@@ -5,6 +5,8 @@
 #include "imgui/ImGuiManager.h"
 #include "imgui/imguiLayer.h"
 
+#include "GLFW/GLFWManager.h"
+
 namespace V_Engine
 {
 
@@ -25,6 +27,67 @@ namespace V_Engine
 
 		m_imguiLayer = new imguiLayer();
 		m_layerStack.Push(m_imguiLayer);
+
+		float vertices[] = {
+			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+			 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+			 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f
+		};
+		uint32_t indices[] = {
+			0, 1, 2
+		};
+
+		BufferLayout layout = {
+			{ BufferDataType::Vector3, "a_pos"},
+			{ BufferDataType::Vector4, "a_color"}
+		};
+
+		m_vertexArray = std::make_unique<VertexArray>();
+		m_vertexArray->Bind();
+		
+		m_vertexArray->SetVertexBuffer(
+			std::make_unique<VertexBuffer>(vertices, sizeof(vertices), layout)
+		);
+
+		m_vertexArray->SetElementBuffer(
+			std::make_unique<ElementBuffer>(indices, sizeof(indices))
+		);
+
+		m_vertexArray->Unbind();
+
+		std::string vertexShader = R"(
+			#version 330 core
+
+			layout(location = 0) in vec3 a_pos;
+			layout(location = 1) in vec4 a_color;
+
+			out vec3 v_pos;
+			out vec4 v_color;
+
+			void main() 
+			{
+				v_pos = a_pos;
+				v_color = a_color;
+				gl_Position = vec4(a_pos, 1.0);
+			}
+		)";
+
+		std::string fragmentShader = R"(
+			#version 330 core
+
+			layout(location = 0) out vec4 color;
+
+			in vec3 v_pos;
+			in vec4 v_color;
+
+			void main()
+			{
+				color = v_color;
+			}
+		)";
+
+		m_shader = std::make_unique<Shader>(vertexShader, fragmentShader);
+
 	}
 
 	Application::~Application()
@@ -44,6 +107,11 @@ namespace V_Engine
 
 			glClearColor(.51f, .45f, .9f, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
+
+			m_shader->Bind();
+			m_vertexArray->Bind();
+			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+			m_vertexArray->Unbind();
 
 			m_imguiLayer->StartDrawImGui();
 			for (Layer* layer : m_layerStack)

@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "Window.h"
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
-#include "GLFW/glfw3.h"
 #include "Core/Log.h"
 #include "Core/Events/KeyEvent.h"
 #include "Core/Events/MouseEvent.h"

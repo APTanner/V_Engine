@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 
+#include "Buffer.h"
 namespace V_Engine 
 {
 	class VertexArray
@@ -10,10 +11,15 @@ namespace V_Engine
 		VertexArray();
 		~VertexArray();
 
+		void SetVertexBuffer(std::unique_ptr<VertexBuffer> vertexBuffer);
+		void SetElementBuffer(std::unique_ptr<ElementBuffer> elementBuffer);
+
 		void Bind() const;
 		void Unbind() const;
 	private:
-		GL_UNSIGNED_INT
+		unsigned int m_vao;
+		std::unique_ptr<VertexBuffer> m_vertexBuffer;
+		std::unique_ptr<ElementBuffer> m_elementBuffer;
 	};
 }
 

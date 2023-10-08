@@ -6,47 +6,73 @@
 
 namespace V_Engine
 {
+	struct BufferDataTypeData
+	{
+		int ComponentCount;
+		int ElementSize;
+		GLenum GLType;
+	};
+
 	static constexpr uint32_t numBufferDataTypes = 3;
+
+	constexpr BufferDataTypeData bufferDataTypeData[numBufferDataTypes] = {
+		{2, sizeof(float), GL_FLOAT},
+		{3, sizeof(float), GL_FLOAT},
+		{4, sizeof(float), GL_FLOAT},
+	};
 
 	enum class BufferDataType : uint32_t
 	{
 		Vector2 = 0, Vector3, Vector4,
 	};
 
-	static struct BufferDataTypeData
+	enum class BufferDataNormalizationState
 	{
-		int ElementCount;
-		int ElementSize;
-		GLenum GLType;
+		NotNormalized,
+		Normalized
 	};
 
-	static constexpr BufferDataTypeData bufferDataTypeData[numBufferDataTypes] = {
-		{2, sizeof(float), GL_FLOAT},
-		{3, sizeof(float), GL_FLOAT},
-		{4, sizeof(float), GL_FLOAT},
-	};
-
-	static int GetBufferDataTypeElementCount(BufferDataType t)
+	static bool checkDataArrayBounds(BufferDataType t)
 	{
-		V_ASSERT((uint32_t)t < numBufferDataTypes, "You haven't added the static data for that BufferDataType yet");
-		return bufferDataTypeData[(uint32_t)t].ElementCount;
+		int i = (uint32_t)t;
+		if (i >= 0 && i < numBufferDataTypes)
+		{
+			return true;
+		}
+		throw std::out_of_range("No data for that BufferDataType");
+		return false;
 	}
 
-	static int GetBufferDataTypeElementSize(BufferDataType t)
+	inline int GetBufferDataTypeComponentCount(BufferDataType t)
 	{
-		V_ASSERT((uint32_t)t < numBufferDataTypes, "You haven't added the static data for that BufferDataType yet");
-		return bufferDataTypeData[(uint32_t)t].ElementSize;
+		if (checkDataArrayBounds(t))
+		{
+			return bufferDataTypeData[(uint32_t)t].ComponentCount;
+		}
+		return 0;
 	}
 
-	static GLenum GetBufferDataTypeGLenum(BufferDataType t)
+	inline int GetBufferDataTypeElementSize(BufferDataType t)
 	{
-		V_ASSERT((uint32_t)t < numBufferDataTypes, "You haven't added the static data for that BufferDataType yet");
-		return bufferDataTypeData[(uint32_t)t].GLType;
+		if (checkDataArrayBounds(t))
+		{
+			return bufferDataTypeData[(uint32_t)t].ElementSize;
+		}
+		return 0;
 	}
 
-	static int GetBufferDataTypeSize(BufferDataType t)
+	inline GLenum GetBufferDataTypeGLenum(BufferDataType t)
 	{
-		return GetBufferDataTypeElementCount(t) * GetBufferDataTypeElementSize(t);
+		if (checkDataArrayBounds(t))
+		{
+			return bufferDataTypeData[(uint32_t)t].GLType;
+		}
+		return 0;
+	}
+
+	inline int GetBufferDataTypeSize(BufferDataType t)
+	{
+		return GetBufferDataTypeComponentCount(t) * GetBufferDataTypeElementSize(t);
 	}
 
 	struct VertexBufferElement
@@ -54,11 +80,20 @@ namespace V_Engine
 		BufferDataType Type;
 		int Offset;
 		int Size;
+		bool Normalized;
 
 		std::string Name;
 
-		VertexBufferElement(BufferDataType type, const std::string& name)
-			: Type(type), Name(name), Offset(0), Size(GetBufferDataTypeSize(type))
+		VertexBufferElement(
+			BufferDataType type,
+			const std::string& name,
+			BufferDataNormalizationState normalized = BufferDataNormalizationState::NotNormalized)
+			:
+			Type(type),
+			Name(name),
+			Normalized(normalized == BufferDataNormalizationState::Normalized ? true : false),
+			Size(GetBufferDataTypeSize(type)),
+			Offset(0)
 		{
 		}
 	};
@@ -66,7 +101,12 @@ namespace V_Engine
 	class BufferLayout
 	{
 	public:
-		BufferLayout(std::initializer_list<VertexBufferElement> elems);
+		BufferLayout() {}
+		BufferLayout(std::initializer_list<VertexBufferElement> elems)
+			: m_elements(elems)
+		{
+			CalculateStrideAndElementOffsets();
+		}
 
 		inline const std::vector<VertexBufferElement>& GetElements() const { return m_elements; }
 
@@ -75,24 +115,29 @@ namespace V_Engine
 		void CalculateStrideAndElementOffsets();
 	private:
 		std::vector<VertexBufferElement> m_elements;
-		int m_stride;
+		int m_stride = 0;
 	};
 
 	class VertexBuffer
 	{
 	public:
-		VertexBuffer(float* verticies, unsigned int size);
+		VertexBuffer(float* verticies, unsigned int size, BufferLayout layout);
+		~VertexBuffer();
 
 		void Bind() const;
 		void Unbind() const;
+
+		inline BufferLayout& GetLayout() { return m_layout; }
 	private:
 		unsigned int m_vbo = 0;
+		BufferLayout m_layout;
 	};
 
 	class ElementBuffer
 	{
 	public:
 		ElementBuffer(uint32_t* indicies, unsigned int size);
+		~ElementBuffer();
 
 		void Bind() const;
 		void Unbind() const;
