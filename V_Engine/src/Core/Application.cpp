@@ -57,7 +57,7 @@ namespace V_Engine
 
 		m_vertexArray->Unbind();
 
-		m_shader = std::unique_ptr<Shader>(ShaderLoader::LoadShaderFromFile("vertex_color"));
+		m_shader = ShaderLoader::LoadShaderFromFile("vertex_color");
 	}
 
 	Application::~Application()
@@ -80,7 +80,7 @@ namespace V_Engine
 
 			m_shader->Bind();
 			m_vertexArray->Bind();
-			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, m_vertexArray->GetIndexCount(), GL_UNSIGNED_INT, 0);
 			m_vertexArray->Unbind();
 
 			m_imguiLayer->StartDrawImGui();

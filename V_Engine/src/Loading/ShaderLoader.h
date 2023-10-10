@@ -8,7 +8,7 @@ namespace V_Engine
 	class ShaderLoader
 	{
 	public:
-		static Shader* LoadShaderFromFile(const std::string& shaderName);
+		static std::unique_ptr<Shader> LoadShaderFromFile(const std::string& shaderName);
 	private:
 		
 	};

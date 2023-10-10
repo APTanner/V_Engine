@@ -38,6 +38,7 @@ namespace V_Engine
 
 	ElementBuffer::ElementBuffer(uint32_t* indicies, unsigned int size)
 	{
+		m_count = size / sizeof(uint32_t);
 		glGenBuffers(1, &m_ebo);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indicies, GL_STATIC_DRAW);

@@ -141,8 +141,11 @@ namespace V_Engine
 
 		void Bind() const;
 		void Unbind() const;
+
+		inline int GetIndexCount() const { return m_count; }
 	private:
 		unsigned int m_ebo = 0;
+		unsigned int m_count = 0;
 	};
 }
 

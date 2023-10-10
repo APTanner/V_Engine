@@ -9,7 +9,7 @@
 
 namespace V_Engine 
 {
-	Shader* ShaderLoader::LoadShaderFromFile(const std::string& shaderName)
+	std::unique_ptr<Shader> ShaderLoader::LoadShaderFromFile(const std::string& shaderName)
 	{
 		std::filesystem::path folderPath(shaderFileLocation);
 
@@ -33,6 +33,6 @@ namespace V_Engine
 		std::stringstream fShader;
 		fShader << fShaderFile.rdbuf();
 
-		return new Shader(vShader.str(), fShader.str());
+		return std::make_unique<Shader>(vShader.str(), fShader.str());
 	}
 }

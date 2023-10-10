@@ -16,6 +16,9 @@ namespace V_Engine
 
 		void Bind() const;
 		void Unbind() const;
+
+		inline int GetIndexCount() const { return m_elementBuffer->GetIndexCount(); }
+
 	private:
 		unsigned int m_vao;
 		std::unique_ptr<VertexBuffer> m_vertexBuffer;
