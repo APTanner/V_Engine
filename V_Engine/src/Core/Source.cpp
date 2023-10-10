@@ -7,7 +7,7 @@ namespace V_Engine
 	int main()
 	{
 		Application app = Application();
-		app.Run();
+		app.Update();
 		return 0;
 	}
 }

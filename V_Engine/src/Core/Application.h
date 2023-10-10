@@ -22,7 +22,7 @@ namespace V_Engine
 		inline static Application& Get() { return *m_instance; };
 		inline Window& GetWindow() const { return *m_window; }
 
-		void Run();
+		void Update();
 
 		void OnEvent(std::unique_ptr<Event> event);
 		bool OnWindowClose(const WindowCloseEvent& event);

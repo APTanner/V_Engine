@@ -7,6 +7,8 @@
 
 #include "GLFW/GLFWManager.h"
 
+#include "Loading/ShaderLoader.h"
+
 namespace V_Engine
 {
 
@@ -55,39 +57,7 @@ namespace V_Engine
 
 		m_vertexArray->Unbind();
 
-		std::string vertexShader = R"(
-			#version 330 core
-
-			layout(location = 0) in vec3 a_pos;
-			layout(location = 1) in vec4 a_color;
-
-			out vec3 v_pos;
-			out vec4 v_color;
-
-			void main() 
-			{
-				v_pos = a_pos;
-				v_color = a_color;
-				gl_Position = vec4(a_pos, 1.0);
-			}
-		)";
-
-		std::string fragmentShader = R"(
-			#version 330 core
-
-			layout(location = 0) out vec4 color;
-
-			in vec3 v_pos;
-			in vec4 v_color;
-
-			void main()
-			{
-				color = v_color;
-			}
-		)";
-
-		m_shader = std::make_unique<Shader>(vertexShader, fragmentShader);
-
+		m_shader = std::unique_ptr<Shader>(ShaderLoader::LoadShaderFromFile("vertex_color"));
 	}
 
 	Application::~Application()
@@ -99,7 +69,7 @@ namespace V_Engine
 		GLFWManager::Shutdown();
 	}
 
-	void Application::Run()
+	void Application::Update()
 	{
 		while (m_running)
 		{
