@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Application.h"
 
+#include <glm/vec4.hpp>
 #include "Events/WindowEvent.h"
 #include "imgui/ImGuiManager.h"
 #include "imgui/imguiLayer.h"
@@ -8,6 +9,10 @@
 #include "GLFW/GLFWManager.h"
 
 #include "Loading/ShaderLoader.h"
+
+#include "Rendering/RenderOperations.h"
+#include "Rendering/Renderer.h"
+
 
 namespace V_Engine
 {
@@ -44,18 +49,20 @@ namespace V_Engine
 			{ BufferDataType::Vector4, "a_color"}
 		};
 
-		m_vertexArray = std::make_unique<VertexArray>();
-		m_vertexArray->Bind();
+		VertexArray* vertexArray = new VertexArray();
+		vertexArray->Bind();
 		
-		m_vertexArray->SetVertexBuffer(
+		vertexArray->SetVertexBuffer(
 			std::make_unique<VertexBuffer>(vertices, sizeof(vertices), layout)
 		);
 
-		m_vertexArray->SetElementBuffer(
+		vertexArray->SetElementBuffer(
 			std::make_unique<ElementBuffer>(indices, sizeof(indices))
 		);
 
-		m_vertexArray->Unbind();
+		vertexArray->Unbind();
+
+		m_mesh = std::make_unique<Mesh>(vertexArray);
 
 		m_shader = ShaderLoader::LoadShaderFromFile("vertex_color");
 	}
@@ -75,13 +82,13 @@ namespace V_Engine
 		{
 			m_window->OnUpdate();
 
-			glClearColor(.51f, .45f, .9f, 1);
-			glClear(GL_COLOR_BUFFER_BIT);
+			RenderOperations::SetClearColor(glm::vec4(.51f, .45f, .9f, 1));
+			RenderOperations::ClearColorBuffer();
 
+			Renderer::BeginScene();
 			m_shader->Bind();
-			m_vertexArray->Bind();
-			glDrawElements(GL_TRIANGLES, m_vertexArray->GetIndexCount(), GL_UNSIGNED_INT, 0);
-			m_vertexArray->Unbind();
+			Renderer::SubmitMesh(*m_mesh);
+			Renderer::EndScene();
 
 			m_imguiLayer->StartDrawImGui();
 			for (Layer* layer : m_layerStack)
