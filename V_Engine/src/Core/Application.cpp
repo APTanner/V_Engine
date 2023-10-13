@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "Application.h"
 
-#include <glm/vec4.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "Events/WindowEvent.h"
 #include "imgui/ImGuiManager.h"
 #include "imgui/imguiLayer.h"
@@ -62,7 +64,9 @@ namespace V_Engine
 
 		vertexArray->Unbind();
 
-		m_mesh = std::make_unique<Mesh>(vertexArray);
+		m_entity = std::make_unique<Entity>();
+		m_entity->SetMesh(std::make_shared<Mesh>(vertexArray));
+		m_entity->GetTransform().SetRotation(glm::vec3(0, 0, 20));
 
 		m_shader = ShaderLoader::LoadShaderFromFile("vertex_color");
 	}
@@ -85,9 +89,22 @@ namespace V_Engine
 			RenderOperations::SetClearColor(glm::vec4(.51f, .45f, .9f, 1));
 			RenderOperations::ClearColorBuffer();
 
+
 			Renderer::BeginScene();
 			m_shader->Bind();
-			Renderer::SubmitMesh(*m_mesh);
+
+			glm::mat4 projection = glm::mat4(1.0f);
+			glm::mat4 view = glm::mat4(1.0f);
+			projection = glm::perspective(glm::radians(45.0f), (float)m_window->GetWidth() / (float)m_window->GetHeight(), 0.1f, 100.0f);
+			//projection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 100.0f);
+			view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
+
+			m_shader->SetProjectionMatrix(projection);
+			m_shader->SetViewMatrix(view);
+
+			m_shader->SetLocalToWorldMatrix(m_entity->GetTransform().LocaltoWorld());
+
+			Renderer::SubmitMesh(m_entity->GetMesh());
 			Renderer::EndScene();
 
 			m_imguiLayer->StartDrawImGui();

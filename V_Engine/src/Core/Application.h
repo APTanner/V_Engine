@@ -10,7 +10,7 @@
 
 #include "GLFW/Window.h"
 
-#include "Physicals/Mesh.h"
+#include "Entity/Entity.h"
 
 
 namespace V_Engine
@@ -39,7 +39,7 @@ namespace V_Engine
 		LayerStack m_layerStack;
 		EventBuffer m_eventBuffer;
 
-		std::unique_ptr<Mesh> m_mesh;
+		std::unique_ptr<Entity> m_entity;
 		std::unique_ptr<Shader> m_shader;
 
 		bool m_running = true;

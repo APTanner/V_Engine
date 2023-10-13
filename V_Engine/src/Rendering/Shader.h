@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <glm/glm.hpp>
 
 namespace V_Engine
 {
@@ -11,6 +12,12 @@ namespace V_Engine
 
 		void Bind() const;
 		void Unbind() const;
+
+		void SetLocalToWorldMatrix(const glm::mat4& localToClip);
+		void SetViewMatrix(const glm::mat4& view);
+		void SetProjectionMatrix(const glm::mat4& projection);
+
+		void SetMat4(const std::string& name, const glm::mat4& matrix);
 	private:
 		unsigned int m_shader = 0;
 	};

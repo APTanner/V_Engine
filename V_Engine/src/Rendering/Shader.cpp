@@ -2,6 +2,7 @@
 #include "Shader.h"
 
 #include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "Core/Log.h"
 
@@ -34,7 +35,7 @@ namespace V_Engine
 			// We don't need the shader anymore.
 			glDeleteShader(vertexShader);
 
-			LOG_ERROR("VERTEX_SHADER_COMPILATION: %s", infoLog);
+			LOG_ERROR("VERTEX_SHADER_COMPILATION: %s", std::string(infoLog.begin(), infoLog.end()));
 
 			// In this simple program, we'll just leave
 			return;
@@ -66,7 +67,7 @@ namespace V_Engine
 			// Either of them. Don't leak shaders.
 			glDeleteShader(vertexShader);
 
-			LOG_ERROR("FRAGMENT_SHADER_COMPILATION: %s", infoLog);
+			LOG_ERROR("FRAGMENT_SHADER_COMPILATION: %s", std::string(infoLog.begin(), infoLog.end()));
 
 
 			// In this simple program, we'll just leave
@@ -103,7 +104,7 @@ namespace V_Engine
 			glDeleteShader(vertexShader);
 			glDeleteShader(fragmentShader);
 
-			// Use the infoLog as you see fit.
+			LOG_ERROR("SHADER_LINKING: %s", std::string(infoLog.begin(), infoLog.end()));
 
 			// In this simple program, we'll just leave
 			return;
@@ -127,5 +128,23 @@ namespace V_Engine
 	void Shader::Unbind() const
 	{
 		glUseProgram(0);
+	}
+
+	void Shader::SetLocalToWorldMatrix(const glm::mat4& localToClip)
+	{
+		SetMat4("localToWorld", localToClip);
+	}
+	void Shader::SetViewMatrix(const glm::mat4& view)
+	{
+		SetMat4("view", view);
+	}
+	void Shader::SetProjectionMatrix(const glm::mat4& projection)
+	{
+		SetMat4("projection", projection);
+	}
+	void Shader::SetMat4(const std::string& name, const glm::mat4& matrix)
+	{
+		int loc = glGetUniformLocation(m_shader, name.c_str());
+		glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 }

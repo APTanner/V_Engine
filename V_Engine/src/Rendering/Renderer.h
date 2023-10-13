@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Physicals/Mesh.h"
+#include "Mesh.h"
 namespace V_Engine
 {
 	class Renderer
