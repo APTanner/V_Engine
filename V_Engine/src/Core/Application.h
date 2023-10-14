@@ -7,10 +7,12 @@
 #include "imgui/imguiLayer.h"
 #include "Rendering/VertexArray.h"
 #include "Rendering/Shader.h"
+#include "Rendering/Camera.h"
 
 #include "GLFW/Window.h"
 
 #include "Entity/Entity.h"
+
 
 
 namespace V_Engine
@@ -23,6 +25,7 @@ namespace V_Engine
 
 		inline static Application& Get() { return *m_instance; };
 		inline Window& GetWindow() const { return *m_window; }
+		inline Camera& GetCamera() const { return *m_camera; }
 
 		void Update();
 
@@ -41,6 +44,7 @@ namespace V_Engine
 
 		std::unique_ptr<Entity> m_entity;
 		std::unique_ptr<Shader> m_shader;
+		std::unique_ptr<Camera> m_camera;
 
 		bool m_running = true;
 	};

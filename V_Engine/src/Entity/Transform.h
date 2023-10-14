@@ -10,6 +10,7 @@ namespace V_Engine
 		Transform();
 		~Transform();
 
+		// I don't allow scaling so the forward vector doesn't need to be normalized
 		inline const glm::mat4x4& LocaltoWorld() const { return m_localtoWorld; }
 		inline glm::vec3 GetPosition() const { return glm::vec3(m_localtoWorld[3]); }
 		inline glm::vec3 GetForward() const { return -glm::vec3(m_localtoWorld[2]); }
@@ -17,7 +18,7 @@ namespace V_Engine
 		inline glm::vec3 GetRight() const { return glm::vec3(m_localtoWorld[0]); }
 
 		void SetPosition(const glm::vec3& position);
-		void Translate(const glm::vec3& v);
+		void TranslateLocalSpace(const glm::vec3& v);
 
 		void SetRotation(const glm::vec3& rotation);
 		void Rotate(const glm::vec3& v);

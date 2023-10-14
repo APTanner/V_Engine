@@ -27,7 +27,7 @@ namespace V_Engine
 		return state == GLFW_PRESS;
 	}
 
-	std::pair<float, float> Input::GetMousePosition()
+	glm::vec2 Input::GetMousePosition()
 	{
 		double x;
 		double y;
@@ -35,6 +35,6 @@ namespace V_Engine
 			Application::Get().GetWindow().GetWindowPtr(),
 			&x, &y
 		);
-		return std::pair<float,float>((float)x, (float)y);
+		return glm::vec2((float)x, (float)y);
 	}
 }

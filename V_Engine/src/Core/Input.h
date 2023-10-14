@@ -2,14 +2,16 @@
 
 #include "pch.h"
 
+#include <glm/glm.hpp>
+
 namespace V_Engine
 {
 	class Input
 	{
 	public:
-		inline static bool GetKeyDown(int keycode);
-		inline static bool GetMouseButtonDown(int button);
-		inline static std::pair<float, float> GetMousePosition();
+		static bool GetKeyDown(int keycode);
+		static bool GetMouseButtonDown(int button);
+		static glm::vec2 GetMousePosition();
 	private:
 	};
 }

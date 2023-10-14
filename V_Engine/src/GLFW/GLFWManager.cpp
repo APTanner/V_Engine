@@ -28,6 +28,7 @@ namespace V_Engine
 		{
 			LOG_ERROR("Failed to load Glad");
 		}
+		glEnable(GL_DEPTH_TEST);
 		return ptr;
 	}
 
