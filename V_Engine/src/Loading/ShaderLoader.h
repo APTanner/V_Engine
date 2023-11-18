@@ -5,6 +5,7 @@ namespace V_Engine
 {
 	constexpr static const char* shaderFileLocation = "..\\resources\\shaders";
 
+	//TODO - turn this into a general ResourceLoader static class
 	class ShaderLoader
 	{
 	public:

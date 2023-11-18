@@ -49,18 +49,6 @@ static glm::mat4 getRotation(const glm::vec3& rotation)
 		rotateZ(glm::radians(rotation.z));
 }
 
-void printMatrix(const glm::mat4& mat)
-{
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			std::cout << mat[j][i] << "\t";
-		}
-		std::cout << std::endl;
-	}
-}
-
 namespace V_Engine
 {
 	Transform::Transform()

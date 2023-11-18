@@ -9,11 +9,6 @@
 #include "Core/Application.h"
 #include "Core/Time.h"
 
-static void printVector(glm::vec3 v)
-{
-	std::cout << "(" << v.x << ',' << v.y << ',' << v.z << ")" << std::endl;
-}
-
 namespace V_Engine
 {
 	constexpr float viewSpeed = 1.0f;
@@ -47,8 +42,6 @@ namespace V_Engine
 			);
 		}
 
-		
-
 		glm::vec2 currentMousePos = Input::GetMousePosition();
 		if (Input::GetMouseButtonDown(GLFW_MOUSE_BUTTON_1))
 		{
@@ -64,19 +57,6 @@ namespace V_Engine
 				m_yawAndPitch.y = -89.0f;
 			}
 			camera.GetTransform().SetRotation(glm::vec3(m_yawAndPitch.y, m_yawAndPitch.x, 0.0f));
-			std::cout << "Pitch: " << m_yawAndPitch.y << ", Yaw: " << m_yawAndPitch.x << std::endl;
-			glm::vec3 heading = camera.GetTransform().GetForward();
-			heading = glm::normalize(heading);
-
-			// Calculate pitch (angle with the XZ plane)
-			float pitchRadians = std::asin(heading.y);
-			float pitchDegrees = glm::degrees(pitchRadians);
-			std::cout << "Pitch from heading: " << pitchDegrees << std::endl;
-
-			float yaw = std::atan2(heading.z, heading.x);
-			float yawDegrees = glm::degrees(yaw);
-			std::cout << "Yaw from heading: " << yawDegrees << std::endl;
-
 		}
 		m_lastMousePosition = currentMousePos;
 	}
